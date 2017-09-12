@@ -1,88 +1,26 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
-	<style>
-	#game-container{
-		display: none;
-	}
-	.letter{
-		display: inline-block;
-		border: 2px solid #fcc;
-		margin: 2px;
-		width: 25px;
-		text-align: center;
-		cursor: url(cursor.png),pointer;
-	}
-	.letter-used{
-		color: white;
-		cursor: default;
-	}
-	</style>
+	<script src="script.js" type="text/javascript"></script>
 </head>
+
 <body>
-	<script>
-		$(function(){
-			var resultsCounter=0;
-			var resultsPool=[];
-			$('#start-button').on('click',function(){
-				var letters=$('#text-content').val().toUpperCase().split('');
-				for (var i = 0; i < letters.length; i++) {
-					$('<div></div>')
-					.addClass('letter')
-					.text(letters[i]).appendTo('#letters-content')
-				};
-				$('#form-container').hide();
-				$('#game-container').show();
-			});
-			$('#letters-content').on('click','.letter',function(){
-				if($(this).hasClass('letter-used')){return};
-				var letter=$(this).text();
-				$('#word-content').append(letter);
-				$(this).addClass('letter-used');
-			});
-			$('#clear-button').on('click',function(){
-				$('#word-content').text(" ");
-				$('.letter-used').removeClass('letter-used');
-			});
-			$('#check-button').on('click',function(){
-				var word = $('#word-content').text();
-				if (resultsPool.indexOf(word)!=-1){return}
-				$.ajax({
-					url:"https://dictionary.yandex.net/api/v1/dicservice.json/lookup",
-					dataType:"jsonp",
-					data:{
-						key: "dict.1.1.20160323T054829Z.7b0911812b321fc8.778ab3624988f7e7b69e55dfe04038d1adefce30",
-						text: word,
-						lang: "ru-ru"
-					}
-				}).then(function(data){
-					if(data.def&&data.def.length>0){
-					$('#word-content').text("");
-					$('.letter-used').removeClass('letter-used');
-					resultsCounter++;
-					$('<div></div>')
-					.addClass('result-item')
-					.html(resultsCounter+". "+word+" &mdash; "+data.def[0].tr[0].text)
-					.appendTo('#result-container');
-					resultsPool.push(word);
-					};
-				});
-			});
-		})
-	</script>
-<div id='form-container'>
-	<p>Введите слово:
-	<input id='text-content'>
-	<button id='start-button'>Начать</button>
-</div>
-<div id='game-container'>
-	<div id='letters-content'></div>
-	<div id='word-content'></div>
-	<button id='check-button'>Проверить</button>
-	<button id='clear-button'>Сброс</button>
-	<div id='result-container'></div>
-</div>
+	<div id='form-container'>
+		<p>Введите слово:
+			<input id='text-content' autofocus>
+			<button id='start-button'>Начать</button>
+	</div>
+	<div id='game-container'>
+		<div id='letters-content'></div>
+		<div id='word-content'></div>
+		<button id='check-button'>Проверить</button>
+		<button id='clear-button'>Сброс</button>
+		<div id='result-container'></div>
+	</div>
 </body>
+
 </html>
